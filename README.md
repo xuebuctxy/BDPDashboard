@@ -2,7 +2,7 @@
 
 入口文件：com.aura.training.dashboard.DashboardApplication
 启动端口： 8080
-接口放在: controller目录下，参考IndexController
+接口放在: controller目录下，参考UserOrderController
 
 启动后可以访问http://localhost:8080/ 页面
 
