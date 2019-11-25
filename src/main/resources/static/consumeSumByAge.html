@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>clickCountByPage</title>
+    <script src="../js/echarts.js"></script>
+    <script src="../js/jquery-3.3.1.js"></script>
+</head>
+<body>
+<div id="main" style="width: 800px;height:600px;margin-top:80px;margin-left:200px;"></div>
+<script type="text/javascript">
+    $.ajaxSetup ({
+        cache: false
+    });
+    // 基于准备好的dom，初始化echarts实例
+    var myEChart = echarts.init(document.getElementById('main'));
+    myEChart.showLoading();
+    myEChart.setOption({
+        title : {
+            text: '不同年龄段消费情况统计',
+            subtext: '消费分布',
+            x:'center'
+        },
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"   //a 系列名称，b 数据项名称，c 数值，d 百分比
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left',
+            data: []
+        },
+        series : [
+            {
+                name: '消费总额',
+                type: 'pie',
+                radius : '55%',
+                center: ['50%', '60%'],
+                data:[],
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    });
+    //初始化加载
+    // $(document).ready(loadData());
+    //定时刷新
+    setInterval(loadData, 5000);
+
+    var names=[];
+    var values=[];
+    function loadData(){
+        $.ajax({
+            type:"get",
+            async : true,
+            url:"/jdcredit/getConsumeResult",
+            dataType:"json",
+            success:function (data) {
+                if(data.length>0){
+                    for(var i=0;i<data.length;i++){
+                        var map=data[i].split("#");
+                        names.push(map[0]);
+                        var obj=new Object();
+                        obj.name=(map[0]);
+                        obj.value=(map[1]);
+                        values.push(obj);
+                    }
+                    myEChart.hideLoading();
+                    myEChart.setOption({
+                        legend: {
+                            data: names
+                        },
+                        series: [{
+                            name: '消费总额',
+                            data: values
+                        }]
+                    });
+                    names=[];
+                    values=[];
+                }
+            },
+            error : function(errorMsg) {
+                alert("请求数据失败!");
+                myEChart.hideLoading();
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

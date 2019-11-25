@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>clickCountByPage</title>
+    <script src="../js/echarts.js"></script>
+    <script src="../js/jquery-3.3.1.js"></script>
+</head>
+<body>
+<div id="main" style="width: 600px;height:400px;margin-top:100px;margin-left:100px;"></div>
+<script type="text/javascript">
+    $.ajaxSetup ({
+        cache: false
+    });
+    // 基于准备好的dom，初始化echarts实例
+    var myEChart = echarts.init(document.getElementById('main'));
+    myEChart.showLoading();
+
+    myEChart.setOption({
+        title: {
+            text: '页面点击量统计',
+            x:'center'
+        },
+        tooltip: {},
+        legend: {
+            data:['点击量'],
+            left:'right'
+        },
+        xAxis: {
+            data: []
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [{
+            name: '点击量',
+            type: 'bar',
+            data: []
+        }]
+    });
+    //初始化加载
+    $(document).ready(loadData());
+    //定时刷新
+    setInterval(loadData, 5000);
+
+    var names=[];
+    var values=[];
+    function loadData(){
+        $.ajax({
+            type:"get",
+            async : true,
+            url:"/jdcredit/getClickResult",
+            dataType:"json",
+            success:function (data) {
+                if(data.length>0){
+                    for(var i=0;i<data.length;i++){
+                        var map=data[i].split("#");
+                        names.push(map[0]);
+                        values.push(map[1]);
+                    }
+                    myEChart.hideLoading();
+                    myEChart.setOption({
+                        xAxis: {
+                            data: names
+                        },
+                        series: [{
+                            name: '点击量',
+                            data: values
+                        }]
+                    });
+                    names=[];
+                    values=[];
+                }
+            },
+            error : function(errorMsg) {
+                alert("请求数据失败!");
+                myEChart.hideLoading();
+            }
+        });
+    }
+
+</script>
+</body>
+</html>
