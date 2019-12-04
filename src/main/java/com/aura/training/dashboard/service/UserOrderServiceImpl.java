@@ -54,7 +54,7 @@ public class UserOrderServiceImpl implements UserOrderService{
                 String ageVal = new String(result.getValue(Bytes.toBytes("cf1"), Bytes.toBytes("age")));
                 String sexVal = new String(result.getValue(Bytes.toBytes("cf1"), Bytes.toBytes("sex")));
                 String active_dateVal = new String(result.getValue(Bytes.toBytes("cf1"), Bytes.toBytes("active_date")));
-                String limitsVal = new String(result.getValue(Bytes.toBytes("cf1"), Bytes.toBytes("limits")));
+                String limitsVal = new String(result.getValue(Bytes.toBytes("cf1"), Bytes.toBytes("limit")));
                 String buy_timeVal = new String(result.getValue(Bytes.toBytes("cf1"), Bytes.toBytes("buy_time")));
                 String priceVal = new String(result.getValue(Bytes.toBytes("cf1"), Bytes.toBytes("price")));
                 String qtyVal = new String(result.getValue(Bytes.toBytes("cf1"), Bytes.toBytes("qty")));
